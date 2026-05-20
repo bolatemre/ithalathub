@@ -11,6 +11,7 @@ workflows:
     scripts:
       - name: Recreate Android Project
         script: |
+          # 🎯 ESKİ V1 BELASINI TEMİZLEME: Android klasörünü tamamen silip modern standartta (V2) sıfırdan kuruyoruz
           rm -rf android
           flutter create --platforms=android --org com.ithalathub .
       - name: Inject Internet Permission
@@ -53,7 +54,6 @@ workflows:
           flutter pub run flutter_launcher_icons:main
       - name: Build Android AAB
         script: |
-          # 🎯 GOOGLE PLAY İÇİN SİHİRLİ DOKUNUŞ: APK yerine AAB üretiyoruz
           flutter build appbundle --release
     artifacts:
       - build/app/outputs/bundle/release/*.aab
