@@ -1,0 +1,22 @@
+workflows:
+  default-workflow:
+    name: IthalatHub Live Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      flutter: stable
+    triggering:
+      events:
+        - push
+    scripts:
+      - name: Set up local.properties
+        script: |
+          echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
+      - name: Get Flutter packages
+        script: |
+          flutter pub get
+      - name: Build Android APK (Release)
+        script: |
+          flutter build apk --release --no-shrink
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
