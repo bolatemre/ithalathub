@@ -149,7 +149,7 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(30),
                   child: Column(
-                    mainAxisAlignment: Mainmathbf.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(Icons.wifi_off_rounded, size: 80, color: Color(0xFF4318FF)),
                       const SizedBox(height: 20),
