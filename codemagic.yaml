@@ -74,7 +74,6 @@ workflows:
     scripts:
       - name: Recreate iOS Project
         script: |
-          # Proje ismini tamamen küçük harfe (ithalathubapp) çekerek Dart hatasını çözdük
           rm -rf ios
           flutter create --platforms=ios --org com.ithalathub --project-name ithalathubapp .
       - name: Set iOS Bundle ID and Permissions
@@ -133,9 +132,11 @@ workflows:
           </dict>
           </plist>
           EOF
+          
+          # 🎯 İŞTE BÜYÜK DÜZELTME: Xcode projesinin içine senin resmi büyük harfli kimliğini (com.ithalathub.ithalathubApp) zorla kazıyoruz.
+          sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = com.ithalathub.ithalathubapp;/PRODUCT_BUNDLE_IDENTIFIER = com.ithalathub.ithalathubApp;/g' ios/Runner.xcodeproj/project.pbxproj
       - name: Set up Apple Certificates
         script: |
-          # Apple Developer Portal'da senin açtığın gerçek Bundle ID'yi buraya yazdık
           app-store-connect fetch-signing-files "com.ithalathub.ithalathubApp" --create
           xcode-project use-profiles
       - name: Install Pods
