@@ -74,8 +74,9 @@ workflows:
     scripts:
       - name: Recreate iOS Project
         script: |
+          # 🎯 BURADA ÇÖZDÜK: Projeyi en baştan direkt com.alotalab.driver.ios kimliğiyle oluşturuyoruz.
           rm -rf ios
-          flutter create --platforms=ios --org com.alotalab --project-name driver .
+          flutter create --platforms=ios --org com.alotalab.driver --project-name ios .
       - name: Set iOS Bundle ID and Permissions
         script: |
           PLIST="ios/Runner/Info.plist"
@@ -95,7 +96,7 @@ workflows:
               <key>CFBundleInfoDictionaryVersion</key>
               <string>6.0</string>
               <key>CFBundleName</key>
-              <string>driver</string>
+              <string>ios</string>
               <key>CFBundlePackageType</key>
               <string>APPL</string>
               <key>CFBundleShortVersionString</key>
@@ -132,6 +133,15 @@ workflows:
           </dict>
           </plist>
           EOF
-          
-          # 🎯 APPLE ENGELİNİ BYPASS ETTİK: Projenin kimliğini zorla feda ettiğimiz boş uygulamanın kimliğine eşitledik
-          sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = com.alotalab.
+      - name: Set up Apple Certificates
+        script: |
+          app-store-connect fetch-signing-files "com.alotalab.driver.ios" --create --generate-certs
+          xcode-project use-profiles
+      - name: Install Pods
+        script: |
+          find . -name "Podfile" -execdir pod install \;
+      - name: Build iOS IPA
+        script: |
+          flutter build ipa --release
+    artifacts:
+      - build/ios/ipa/*.ipa
