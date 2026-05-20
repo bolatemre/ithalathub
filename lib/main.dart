@@ -65,6 +65,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 width: 120,
                 height: 120,
                 fit: BoxFit.cover,
+                // ÇÖZÜM 1: Beyaz arka planı yazılımla transparan yapıp eritiyoruz
+                color: const Color(0xFF4318FF),
+                colorBlendMode: BlendMode.dstATop,
                 errorBuilder: (context, error, stackTrace) {
                   return const Icon(Icons.blur_on, size: 100, color: Colors.white);
                 },
