@@ -65,7 +65,6 @@ class _SplashScreenState extends State<SplashScreen> {
                 width: 120,
                 height: 120,
                 fit: BoxFit.cover,
-                // ÇÖZÜM 1: Beyaz arka planı yazılımla transparan yapıp eritiyoruz
                 color: const Color(0xFF4318FF),
                 colorBlendMode: BlendMode.dstATop,
                 errorBuilder: (context, error, stackTrace) {
@@ -142,8 +141,8 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
                     supportZoom: false,
                     useHybridComposition: true,
                     allowsLinkPreview: false,
-                    // MENÜ VE BUTON KİLİTLERİNİ AÇAN YENİ GÜVENLİK AYARLARI:
-                    mixedContentMode: MixContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
+                    // KELİME HATASI DÜZELTİLDİ: MixedContentMode yapıldı
+                    mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
                     safeBrowsingEnabled: false,
                   ),
                   onWebViewCreated: (controller) {
@@ -161,7 +160,6 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
                       _hasInternet = false;
                     });
                   },
-                  // Yönlendirmeli veya JavaScript tetiklemeli butonların çalışmasını zorunlu kılan tetikleyici:
                   shouldOverrideUrlLoading: (controller, navigationAction) async {
                     return NavigationActionPolicy.ALLOW;
                   },
