@@ -75,7 +75,7 @@ workflows:
       - name: Recreate iOS Project
         script: |
           rm -rf ios
-          flutter create --platforms=ios --org com.ithalathub --project-name ithalathubapp .
+          flutter create --platforms=ios --org com.alotalab --project-name driver .
       - name: Set iOS Bundle ID and Permissions
         script: |
           PLIST="ios/Runner/Info.plist"
@@ -95,7 +95,7 @@ workflows:
               <key>CFBundleInfoDictionaryVersion</key>
               <string>6.0</string>
               <key>CFBundleName</key>
-              <string>ithalathubapp</string>
+              <string>driver</string>
               <key>CFBundlePackageType</key>
               <string>APPL</string>
               <key>CFBundleShortVersionString</key>
@@ -132,17 +132,6 @@ workflows:
           </dict>
           </plist>
           EOF
-          sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = com.ithalathub.ithalathubapp;/PRODUCT_BUNDLE_IDENTIFIER = com.ithalathub.ithalathubApp;/g' ios/Runner.xcodeproj/project.pbxproj
-      - name: Set up Apple Certificates
-        script: |
-          # 🎯 BÜYÜK KURTARICI: Hem sertifikayı hem profili sıfırdan otomatik üret komutunu verdik (--generate-certs)
-          app-store-connect fetch-signing-files "com.ithalathub.ithalathubApp" --create --generate-certs
-          xcode-project use-profiles
-      - name: Install Pods
-        script: |
-          find . -name "Podfile" -execdir pod install \;
-      - name: Build iOS IPA
-        script: |
-          flutter build ipa --release
-    artifacts:
-      - build/ios/ipa/*.ipa
+          
+          # 🎯 APPLE ENGELİNİ BYPASS ETTİK: Projenin kimliğini zorla feda ettiğimiz boş uygulamanın kimliğine eşitledik
+          sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = com.alotalab.
