@@ -1,3 +1,7 @@
+# Codemagic'e Apple entegrasyonunu kullanacağını en tepeden bildiriyoruz
+integrations:
+  app_store_connect: apple_credentials # Codemagic ayarlarına eklediğin anahtar adı
+
 workflows:
   android-workflow:
     name: IthalatHub Android Build
@@ -65,8 +69,6 @@ workflows:
       flutter: 3.22.2
       xcode: latest
       cocoapods: default
-      groups:
-        - apple_credentials
     publishing:
       app_store_connect:
         auth: integration
@@ -78,16 +80,12 @@ workflows:
           flutter create --platforms=ios --org com.ithalathub .
       - name: Set iOS Bundle ID and Permissions
         script: |
-          # GÜVENLİ VE AKILLI İZİN ENJEKSİYONU (Hata fırlatmayan yöntem)
           PLIST="ios/Runner/Info.plist"
-          
-          # HTTP bağlantı iznini ekliyoruz
           plutil -insert NSAppTransportSecurity -json '{"NSAllowsArbitraryLoads":true}' "$PLIST" 2>/dev/null || plutil -replace NSAppTransportSecurity -json '{"NSAllowsArbitraryLoads":true}' "$PLIST"
-          
-          # WebView önizleme modunu garantiye alıyoruz
           plutil -insert io.flutter.embedded_views_preview -bool YES "$PLIST" 2>/dev/null || plutil -replace io.flutter.embedded_views_preview -bool YES "$PLIST"
       - name: Set up Apple Certificates
         script: |
+          # En tepede tanımladığımız entegrasyon sayesinde burası tıkır tıkır imzalayacak
           app-store-connect fetch-signing-files "com.ithalathub.ithalathubApp" --create
           xcode-project use-profiles
       - name: Install Pods
