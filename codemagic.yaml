@@ -9,12 +9,24 @@ workflows:
       events:
         - push
     scripts:
-      - name: Recreate Android Project
+      - name: Atomic Recreate and Clean V1 Embedding
         script: |
-          # 🎯 HAFIZA SIFIRLAMA: Sadece klasörü değil, Flutter'ın eski önbellek ayarlarını da eziyoruz
-          rm -rf android
-          flutter pub pub cache clean --force || true
+          # 1. Mevcut kodlarımızı güvenli bir yere yedekliyoruz
+          mkdir -p /tmp/backup_lib
+          cp -r lib/* /tmp/backup_lib/
+          
+          # 2. Ana dizindeki tüm eski Android/Flutter kalıntılarını ve gizli ayarları temizliyoruz
+          rm -rf android ios build .dart_tool .metadata .packages pubspec.lock pubspec.yaml
+          
+          # 3. Sıfır kilometre, V2 standartlarında tertemiz bir Flutter projesi doğuruyoruz
           flutter create --platforms=android --org com.ithalathub --project-name ithalathub .
+          
+          # 4. Kendi yazdığın o canım kodları sıfır projenin içine geri koyuyoruz
+          rm -rf lib
+          mv /tmp/backup_lib lib
+          
+          # 5. Projenin bağımlılıklarını sıfırdan ve temizce çekiyoruz
+          flutter pub get
       - name: Inject Internet Permission
         script: |
           cat <<EOF > android/app/src/main/AndroidManifest.xml
@@ -55,7 +67,7 @@ workflows:
           flutter pub run flutter_launcher_icons:main
       - name: Build Android AAB
         script: |
-          # V2 embedding'i zorunlu kılmak için tetiği çekiyoruz
+          # Artık v1 kalıntısı imkansız, doğrudan modern AAB dosyasını üretiyoruz
           flutter build appbundle --release
     artifacts:
       - build/app/outputs/bundle/release/*.aab
