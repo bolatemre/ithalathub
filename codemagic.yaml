@@ -4,7 +4,8 @@ workflows:
     max_build_duration: 60
     instance_type: mac_mini_m2
     environment:
-      flutter: stable
+      # Sürümü en kararlı ve sorunsuz çalışan 3.22.2 sürümüne sabitliyoruz
+      flutter: 3.22.2
     triggering:
       events:
         - push
