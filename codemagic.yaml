@@ -11,9 +11,10 @@ workflows:
     scripts:
       - name: Recreate Android Project
         script: |
-          # 🎯 ESKİ V1 BELASINI TEMİZLEME: Android klasörünü tamamen silip modern standartta (V2) sıfırdan kuruyoruz
+          # 🎯 HAFIZA SIFIRLAMA: Sadece klasörü değil, Flutter'ın eski önbellek ayarlarını da eziyoruz
           rm -rf android
-          flutter create --platforms=android --org com.ithalathub .
+          flutter pub pub cache clean --force || true
+          flutter create --platforms=android --org com.ithalathub --project-name ithalathub .
       - name: Inject Internet Permission
         script: |
           cat <<EOF > android/app/src/main/AndroidManifest.xml
@@ -54,6 +55,7 @@ workflows:
           flutter pub run flutter_launcher_icons:main
       - name: Build Android AAB
         script: |
+          # V2 embedding'i zorunlu kılmak için tetiği çekiyoruz
           flutter build appbundle --release
     artifacts:
       - build/app/outputs/bundle/release/*.aab
