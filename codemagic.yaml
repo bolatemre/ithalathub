@@ -58,13 +58,19 @@ workflows:
       - build/app/outputs/flutter-apk/*.apk
 
   ios-workflow:
-    name: IthalatHub iOS Build
+    name: IthalatHub iOS TestFlight Build
     max_build_duration: 60
     instance_type: mac_mini_m2
     environment:
       flutter: 3.22.2
       xcode: latest
       cocoapods: default
+      groups:
+        - apple_credentials
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
     scripts:
       - name: Recreate iOS Project
         script: |
@@ -72,16 +78,23 @@ workflows:
           flutter create --platforms=ios --org com.ithalathub .
       - name: Set iOS Bundle ID and Permissions
         script: |
-          # iOS için internet ve WebView izinlerini Info.plist dosyasına işliyoruz
+          # GÜVENLİ VE AKILLI İZİN ENJEKSİYONU (Hata fırlatmayan yöntem)
           PLIST="ios/Runner/Info.plist"
-          plutil -replace NSAppTransportSecurity -json '{"NSAllowsArbitraryLoads":true}' "$PLIST"
-          plutil -replace io.flutter.embedded_views_preview -bool YES "$PLIST"
+          
+          # HTTP bağlantı iznini ekliyoruz
+          plutil -insert NSAppTransportSecurity -json '{"NSAllowsArbitraryLoads":true}' "$PLIST" 2>/dev/null || plutil -replace NSAppTransportSecurity -json '{"NSAllowsArbitraryLoads":true}' "$PLIST"
+          
+          # WebView önizleme modunu garantiye alıyoruz
+          plutil -insert io.flutter.embedded_views_preview -bool YES "$PLIST" 2>/dev/null || plutil -replace io.flutter.embedded_views_preview -bool YES "$PLIST"
+      - name: Set up Apple Certificates
+        script: |
+          app-store-connect fetch-signing-files "com.ithalathub.ithalathubApp" --create
+          xcode-project use-profiles
       - name: Install Pods
         script: |
           find . -name "Podfile" -execdir pod install \;
-      - name: Build iOS IPA (Unsigned)
+      - name: Build iOS IPA
         script: |
-          # Henüz Apple Developer hesabın olmadığı için 'imzasız' build alıyoruz
-          flutter build ios --release --no-codesign
+          flutter build ipa --release
     artifacts:
-      - build/ios/iphoneos/*.app
+      - build/ios/ipa/*.ipa
