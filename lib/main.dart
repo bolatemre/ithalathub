@@ -71,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Küresel Ticaret & Lojistik Portalı',
+              'Küresel Ticaret & Lojistik Portালী',
               style: TextStyle(
                 color: Colors.white.withOpacity(0.7),
                 fontSize: 14,
@@ -101,6 +101,7 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
         if (webViewController != null && await webViewController!.canGoBack()) {
@@ -116,20 +117,15 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
             children: [
               if (_hasInternet)
                 InAppWebView(
-                  initialUrlRequest: URLRequest(url: Uri.parse("https://ithalathub.com")),
-                  initialOptions: InAppWebViewGroupOptions(
-                    crossPlatform: InAppWebViewOptions(
-                      useShouldOverrideUrlLoading: true,
-                      mediaPlaybackRequiresUserGesture: false,
-                      javaScriptEnabled: true,
-                      supportZoom: false,
-                    ),
-                    android: AndroidInAppWebViewOptions(
-                      useHybridComposition: true,
-                    ),
-                    ios: IOSInAppWebViewOptions(
-                      allowsLinkPreview: false,
-                    ),
+                  // YENİ SÜRÜM UYUMLU WEBURI YAPISI
+                  initialUrlRequest: URLRequest(url: WebUri("https://ithalathub.com")),
+                  initialSettings: InAppWebViewSettings(
+                    useShouldOverrideUrlLoading: true,
+                    mediaPlaybackRequiresUserGesture: false,
+                    javaScriptEnabled: true,
+                    supportZoom: false,
+                    useHybridComposition: true,
+                    allowsLinkPreview: false,
                   ),
                   onWebViewCreated: (controller) {
                     webViewController = controller;
@@ -140,7 +136,7 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
                       _hasInternet = true;
                     });
                   },
-                  onLoadError: (controller, url, code, message) {
+                  onReceivedError: (controller, request, error) {
                     setState(() {
                       _isLoading = false;
                       _hasInternet = false;
@@ -153,7 +149,7 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(30),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: Mainmathbf.center,
                     children: [
                       const Icon(Icons.wifi_off_rounded, size: 80, color: Color(0xFF4318FF)),
                       const SizedBox(height: 20),
@@ -180,7 +176,8 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
                             _hasInternet = true;
                           });
                           if (webViewController != null) {
-                            webViewController!.loadUrl(urlRequest: URLRequest(url: Uri.parse("https://ithalathub.com")));
+                            // YENİ SÜRÜM UYUMLU LOADURL YAPISI
+                            webViewController!.loadUrl(urlRequest: URLRequest(url: WebUri("https://ithalathub.com")));
                           }
                         },
                         child: const Text('Tekrar Dene', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
