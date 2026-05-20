@@ -132,12 +132,11 @@ workflows:
           </dict>
           </plist>
           EOF
-          
-          # 🎯 İŞTE BÜYÜK DÜZELTME: Xcode projesinin içine senin resmi büyük harfli kimliğini (com.ithalathub.ithalathubApp) zorla kazıyoruz.
           sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = com.ithalathub.ithalathubapp;/PRODUCT_BUNDLE_IDENTIFIER = com.ithalathub.ithalathubApp;/g' ios/Runner.xcodeproj/project.pbxproj
       - name: Set up Apple Certificates
         script: |
-          app-store-connect fetch-signing-files "com.ithalathub.ithalathubApp" --create
+          # 🎯 BÜYÜK KURTARICI: Hem sertifikayı hem profili sıfırdan otomatik üret komutunu verdik (--generate-certs)
+          app-store-connect fetch-signing-files "com.ithalathub.ithalathubApp" --create --generate-certs
           xcode-project use-profiles
       - name: Install Pods
         script: |
