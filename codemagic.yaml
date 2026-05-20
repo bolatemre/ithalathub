@@ -4,7 +4,6 @@ workflows:
     max_build_duration: 60
     instance_type: mac_mini_m2
     environment:
-      # Sürümü en kararlı ve sorunsuz çalışan 3.22.2 sürümüne sabitliyoruz
       flutter: 3.22.2
     triggering:
       events:
@@ -13,7 +12,41 @@ workflows:
       - name: Recreate Android Project
         script: |
           rm -rf android
-          flutter create --platforms=android .
+          # Projeyi oluştururken internet iznini otomatik eklemesi için komutu veriyoruz
+          flutter create --platforms=android --org com.ithalathub .
+      - name: Inject Internet Permission
+        script: |
+          # Android manifest dosyasına internet iznini kesin olarak yazdırıyoruz
+          cat <<EOF > android/app/src/main/AndroidManifest.xml
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <uses-permission android:name="android.permission.INTERNET"/>
+              <application
+                  android:label="ithalathub_app"
+                  android:name="\${applicationName}"
+                  android:icon="@mipmap/ic_launcher">
+                  <activity
+                      android:name=".MainActivity"
+                      android:exported="true"
+                      android:launchMode="singleTop"
+                      android:theme="@style/LaunchTheme"
+                      android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|screenLayout|density|uiMode"
+                      android:hardwareAccelerated="true"
+                      android:windowSoftInputMode="adjustResize">
+                      <meta-data
+                        android:name="io.flutter.embedding.android.NormalTheme"
+                        android:resource="@style/NormalTheme"
+                        />
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN"/>
+                          <category android:name="android.intent.category.LAUNCHER"/>
+                      </intent-filter>
+                  </activity>
+                  <meta-data
+                      android:name="flutterEmbedding"
+                      android:value="2" />
+              </application>
+          </manifest>
+          EOF
       - name: Clean and Get Packages
         script: |
           flutter pub clean
