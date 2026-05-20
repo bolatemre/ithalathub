@@ -71,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Küresel Ticaret & Lojistik Portালী',
+              'Küresel Ticaret & Lojistik Portalı',
               style: TextStyle(
                 color: Colors.white.withOpacity(0.7),
                 fontSize: 14,
@@ -117,12 +117,16 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
             children: [
               if (_hasInternet)
                 InAppWebView(
-                  // YENİ SÜRÜM UYUMLU WEBURI YAPISI
                   initialUrlRequest: URLRequest(url: WebUri("https://ithalathub.com")),
                   initialSettings: InAppWebViewSettings(
+                    // AKTİF EDİLEN BUTON VE GİRİŞ İZİNLERİ
+                    javaScriptEnabled: true,
+                    javaScriptCanOpenWindowsAutomatically: true,
+                    domStorageEnabled: true, 
+                    databaseEnabled: true,
+                    
                     useShouldOverrideUrlLoading: true,
                     mediaPlaybackRequiresUserGesture: false,
-                    javaScriptEnabled: true,
                     supportZoom: false,
                     useHybridComposition: true,
                     allowsLinkPreview: false,
@@ -176,7 +180,6 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
                             _hasInternet = true;
                           });
                           if (webViewController != null) {
-                            // YENİ SÜRÜM UYUMLU LOADURL YAPISI
                             webViewController!.loadUrl(urlRequest: URLRequest(url: WebUri("https://ithalathub.com")));
                           }
                         },
