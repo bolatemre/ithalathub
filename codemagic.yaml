@@ -61,9 +61,9 @@ workflows:
     name: IthalatHub iOS TestFlight Build
     max_build_duration: 60
     instance_type: mac_mini_m2
-    # İSİM ŞARTINI KALDIRDIK, PANELE BAĞLI APPLE HESABINI OTOMATİK ÇEKECEK
     integrations:
-      app_store_connect: default
+      # Codemagic panelinde kaydettiğin API anahtarının ismi
+      app_store_connect: ithalathub_key
     environment:
       flutter: 3.22.2
       xcode: latest
@@ -71,7 +71,7 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: true
+        submit_to_testflight: true # Derleme bitince otomatik TestFlight'a yükler
     scripts:
       - name: Recreate iOS Project
         script: |
@@ -84,6 +84,7 @@ workflows:
           plutil -insert io.flutter.embedded_views_preview -bool YES "$PLIST" 2>/dev/null || plutil -replace io.flutter.embedded_views_preview -bool YES "$PLIST"
       - name: Set up Apple Certificates
         script: |
+          # Apple Developer Portal'dan sertifika ve profilleri otomatik üretir
           app-store-connect fetch-signing-files "com.ithalathub.ithalathubApp" --create
           xcode-project use-profiles
       - name: Install Pods
