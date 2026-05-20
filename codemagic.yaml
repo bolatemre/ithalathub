@@ -1,146 +1,53 @@
-workflows:
-  android-workflow:
-    name: IthalatHub Android Build
-    max_build_duration: 60
-    instance_type: mac_mini_m2
-    environment:
-      flutter: 3.22.2
-    triggering:
-      events:
-        - push
-    scripts:
-      - name: Recreate Android Project
-        script: |
-          rm -rf android
-          flutter create --platforms=android --org com.ithalathub .
-      - name: Inject Internet Permission
-        script: |
-          cat <<EOF > android/app/src/main/AndroidManifest.xml
-          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-              <uses-permission android:name="android.permission.INTERNET"/>
-              <application
-                  android:label="İthalatHub"
-                  android:name="\${applicationName}"
-                  android:icon="@mipmap/ic_launcher">
-                  <activity
-                      android:name=".MainActivity"
-                      android:exported="true"
-                      android:launchMode="singleTop"
-                      android:theme="@style/LaunchTheme"
-                      android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|screenLayout|density|uiMode"
-                      android:hardwareAccelerated="true"
-                      android:windowSoftInputMode="adjustResize">
-                      <meta-data
-                        android:name="io.flutter.embedding.android.NormalTheme"
-                        android:resource="@style/NormalTheme"
-                        />
-                      <intent-filter>
-                          <action android:name="android.intent.action.MAIN"/>
-                          <category android:name="android.intent.category.LAUNCHER"/>
-                      </intent-filter>
-                  </activity>
-              </application>
-          </manifest>
-          EOF
-      - name: Generate App Launcher Icons
-        script: |
-          flutter pub add flutter_launcher_icons --dev
-          cat <<EOF > flutter_launcher_icons.yaml
-          flutter_launcher_icons:
-            android: "launcher_icon"
-            image_path: "logo.png"
-          EOF
-          flutter pub run flutter_launcher_icons:main
-      - name: Build Android APK
-        script: |
-          flutter build apk --release --no-shrink
-    artifacts:
-      - build/app/outputs/flutter-apk/*.apk
+!/usr/bin/env bash
 
-  ios-workflow:
-    name: IthalatHub iOS TestFlight Build
-    max_build_duration: 60
-    instance_type: mac_mini_m2
-    integrations:
-      app_store_connect: ithalathub_key
-    environment:
-      flutter: 3.22.2
-      xcode: latest
-      cocoapods: default
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: true
-    scripts:
-      - name: Recreate iOS Project
-        script: |
-          rm -rf ios
-          flutter create --platforms=ios --org com.ithalathub .
-      - name: Set iOS Bundle ID and Permissions
-        script: |
-          # KURŞUN GEÇİRMEZ İZİN ENJEKSİYONU: plutil'i çöpe atıp dosyayı doğrudan kendimiz sıfırdan yazıyoruz
-          cat <<EOF > ios/Runner/Info.plist
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-              <key>CFBundleDevelopmentRegion</key>
-              <string>\$(DEVELOPMENT_LANGUAGE)</string>
-              <key>CFBundleDisplayName</key>
-              <string>İthalatHub</string>
-              <key>CFBundleExecutable</key>
-              <string>\$(EXECUTABLE_NAME)</string>
-              <key>CFBundleIdentifier</key>
-              <string>\$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-              <key>CFBundleInfoDictionaryVersion</key>
-              <string>6.0</string>
-              <key>CFBundleName</key>
-              <string>ithalathub_app</string>
-              <key>CFBundlePackageType</key>
-              <string>APPL</string>
-              <key>CFBundleShortVersionString</key>
-              <string>\$(FLUTTER_BUILD_NAME)</string>
-              <key>CFBundleSignature</key>
-              <string>????</string>
-              <key>CFBundleVersion</key>
-              <string>\$(FLUTTER_BUILD_NUMBER)</string>
-              <key>LSRequiresIPhoneOS</key>
-              <true/>
-              <key>UILaunchStoryboardName</key>
-              <string>LaunchScreen</string>
-              <key>UIMainStoryboardFile</key>
-              <string>Main</string>
-              <key>UISupportedInterfaceOrientations</key>
-              <array>
-                  <string>UIInterfaceOrientationPortrait</string>
-                  <string>UIInterfaceOrientationLandscapeLeft</string>
-                  <string>UIInterfaceOrientationLandscapeRight</string>
-              </array>
-              <key>UIViewControllerBasedStatusBarAppearance</key>
-              <false/>
-              <key>CADisableMinimumFrameDurationOnPhone</key>
-              <true/>
-              <key>UIApplicationSupportsIndirectInputEvents</key>
-              <true/>
-              <key>io.flutter.embedded_views_preview</key>
-              <true/>
-              <key>NSAppTransportSecurity</key>
-              <dict>
-                  <key>NSAllowsArbitraryLoads</key>
-                  <true/>
-              </dict>
-          </dict>
-          </plist>
-          EOF
-      - name: Set up Apple Certificates
-        script: |
-          app-store-connect fetch-signing-files "com.ithalathub.ithalathubApp" --create
-          xcode-project use-profiles
-      - name: Install Pods
-        script: |
-          find . -name "Podfile" -execdir pod install \;
-      - name: Build iOS IPA
-        script: |
-          flutter build ipa --release
-    artifacts:
-      - build/ios/ipa/*.ipa
+flutter build ipa --release
+Showing the last 50 lines. Click this button to load the full log
+         - Ensure you have a valid unique Bundle ID
+         - Register your device with your Apple Developer Account
+         - Let Xcode automatically provision a profile for your app
+  4- Build or run your project again
+  5- Trust your newly created Development Certificate on your iOS device
+     via Settings > General > Device Management > [your new certificate] > Trust
+
+For more information, please visit:
+  https://developer.apple.com/library/content/documentation/IDEs/Conceptual/
+  AppDistributionGuide/MaintainingCertificates/MaintainingCertificates.html
+
+Or run on an iOS simulator without code signing
+════════════════════════════════════════════════════════════════════════════════
+No development certificates available to code sign app for device deployment
+
+
+Build failed :|
+Step 7 script `Build iOS IPA` exited with status code 1
+Archiving com.ithalathub.clone...
+════════════════════════════════════════════════════════════════════════════════
+No valid code signing certificates were found
+You can connect to your Apple Developer account by signing in with your Apple ID
+in Xcode and create an iOS Development Certificate as well as a Provisioning 
+Profile for your project by:
+  1- Open the Flutter project's Xcode target with
+       open ios/Runner.xcworkspace
+  2- Select the 'Runner' project in the navigator then the 'Runner' target
+     in the project settings
+  3- Make sure a 'Development Team' is selected under Signing & Capabilities > Team. 
+     You may need to:
+         - Log in with your Apple ID in Xcode first
+         - Ensure you have a valid unique Bundle ID
+         - Register your device with your Apple Developer Account
+         - Let Xcode automatically provision a profile for your app
+  4- Build or run your project again
+  5- Trust your newly created Development Certificate on your iOS device
+     via Settings > General > Device Management > [your new certificate] > Trust
+
+For more information, please visit:
+  https://developer.apple.com/library/content/documentation/IDEs/Conceptual/
+  AppDistributionGuide/MaintainingCertificates/MaintainingCertificates.html
+
+Or run on an iOS simulator without code signing
+════════════════════════════════════════════════════════════════════════════════
+No development certificates available to code sign app for device deployment
+
+
+Build failed :|
+Step 7 script `Build iOS IPA` exited with status code 1
