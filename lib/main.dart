@@ -58,7 +58,6 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // GÜVENLİ RESİM ÇEKME ALANI: İnternet üzerinden kendi logonuzu çeker
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.network(
@@ -67,7 +66,6 @@ class _SplashScreenState extends State<SplashScreen> {
                 height: 120,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  // Eğer logo henüz yüklenmediyse hata vermez, yerine bu şık ikonu basar
                   return const Icon(Icons.blur_on, size: 100, color: Colors.white);
                 },
               ),
@@ -84,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const SizedBox(height: 10),
             const Text(
-              'Küresel Ticaret & Lojistik Portalı', // TÜRKÇE KARAKTER SORUNU ÇÖZÜLDÜ
+              'Küresel Ticaret & Lojistik Portalı',
               style: TextStyle(
                 color: Colors.white70,
                 fontSize: 14,
@@ -141,6 +139,9 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
                     supportZoom: false,
                     useHybridComposition: true,
                     allowsLinkPreview: false,
+                    // MENÜ VE BUTON KİLİTLERİNİ AÇAN YENİ GÜVENLİK AYARLARI:
+                    mixedContentMode: MixContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
+                    safeBrowsingEnabled: false,
                   ),
                   onWebViewCreated: (controller) {
                     webViewController = controller;
@@ -156,6 +157,10 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
                       _isLoading = false;
                       _hasInternet = false;
                     });
+                  },
+                  // Yönlendirmeli veya JavaScript tetiklemeli butonların çalışmasını zorunlu kılan tetikleyici:
+                  shouldOverrideUrlLoading: (controller, navigationAction) async {
+                    return NavigationActionPolicy.ALLOW;
                   },
                 )
               else
