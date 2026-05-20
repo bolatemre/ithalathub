@@ -51,11 +51,12 @@ workflows:
             image_path: "logo.png"
           EOF
           flutter pub run flutter_launcher_icons:main
-      - name: Build Android APK
+      - name: Build Android AAB
         script: |
-          flutter build apk --release --no-shrink
+          # 🎯 GOOGLE PLAY İÇİN SİHİRLİ DOKUNUŞ: APK yerine AAB üretiyoruz
+          flutter build appbundle --release
     artifacts:
-      - build/app/outputs/flutter-apk/*.apk
+      - build/app/outputs/bundle/release/*.aab
 
   ios-workflow:
     name: IthalatHub iOS TestFlight Build
@@ -74,7 +75,6 @@ workflows:
     scripts:
       - name: Recreate iOS Project
         script: |
-          # 🎯 BURADA ÇÖZDÜK: Projeyi en baştan direkt com.alotalab.driver.ios kimliğiyle oluşturuyoruz.
           rm -rf ios
           flutter create --platforms=ios --org com.alotalab.driver --project-name ios .
       - name: Set iOS Bundle ID and Permissions
