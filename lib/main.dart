@@ -58,15 +58,13 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+            // LOGO ALANI: Tüm eritme ve kutu zorlamaları kaldırıldı, logonun orijinal transparanlığı korundu.
+            SizedBox(
+              width: 140,
+              height: 140,
               child: Image.network(
                 'https://raw.githubusercontent.com/bolatemre/ithalathub/main/logo.png',
-                width: 120,
-                height: 120,
-                fit: BoxFit.cover,
-                color: const Color(0xFF4318FF),
-                colorBlendMode: BlendMode.dstATop,
+                fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
                   return const Icon(Icons.blur_on, size: 100, color: Colors.white);
                 },
@@ -141,7 +139,6 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
                     supportZoom: false,
                     useHybridComposition: true,
                     allowsLinkPreview: false,
-                    // KELİME HATASI DÜZELTİLDİ: MixedContentMode yapıldı
                     mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
                     safeBrowsingEnabled: false,
                   ),
