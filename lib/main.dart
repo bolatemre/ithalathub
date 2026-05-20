@@ -58,7 +58,20 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.blur_on, size: 100, color: Colors.white),
+            // GÜVENLİ RESİM ÇEKME ALANI: İnternet üzerinden kendi logonuzu çeker
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.network(
+                'https://raw.githubusercontent.com/bolatemre/ithalathub/main/logo.png',
+                width: 120,
+                height: 120,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  // Eğer logo henüz yüklenmediyse hata vermez, yerine bu şık ikonu basar
+                  return const Icon(Icons.blur_on, size: 100, color: Colors.white);
+                },
+              ),
+            ),
             const SizedBox(height: 24),
             const Text(
               'İTHALATHUB',
@@ -70,10 +83,10 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            Text(
-              'Küresel Ticaret & Lojistik Portalı',
+            const Text(
+              'Küresel Ticaret & Lojistik Portalı', // TÜRKÇE KARAKTER SORUNU ÇÖZÜLDÜ
               style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white70,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -119,12 +132,10 @@ class _MainWebViewScreenState extends State<MainWebViewScreen> {
                 InAppWebView(
                   initialUrlRequest: URLRequest(url: WebUri("https://ithalathub.com")),
                   initialSettings: InAppWebViewSettings(
-                    // AKTİF EDİLEN BUTON VE GİRİŞ İZİNLERİ
                     javaScriptEnabled: true,
                     javaScriptCanOpenWindowsAutomatically: true,
                     domStorageEnabled: true, 
                     databaseEnabled: true,
-                    
                     useShouldOverrideUrlLoading: true,
                     mediaPlaybackRequiresUserGesture: false,
                     supportZoom: false,
