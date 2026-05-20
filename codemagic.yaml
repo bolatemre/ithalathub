@@ -9,14 +9,13 @@ workflows:
       events:
         - push
     scripts:
-      - name: Recreate Android Project (Fix V1 Embedding)
+      - name: Recreate Android Project
         script: |
-          # Eski sıkıntılı android klasörünü sunucuda tamamen siliyoruz
           rm -rf android
-          # Flutter'a sıfır kilometre, en güncel standartta Android altyapısı kurduruyoruz
           flutter create --platforms=android .
-      - name: Get Flutter packages
+      - name: Clean and Get Packages
         script: |
+          flutter pub clean
           flutter pub get
       - name: Build Android APK (Release)
         script: |
