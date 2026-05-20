@@ -61,9 +61,9 @@ workflows:
     name: IthalatHub iOS TestFlight Build
     max_build_duration: 60
     instance_type: mac_mini_m2
-    # CODEMAGIC'İN İSTEDİĞİ ENTEGRASYON BAĞLANTISINI TAM BURAYA KOYDUK:
+    # İSİM ŞARTINI KALDIRDIK, PANELE BAĞLI APPLE HESABINI OTOMATİK ÇEKECEK
     integrations:
-      app_store_connect: apple_credentials # Codemagic ayarlarına eklediğin anahtar adı
+      app_store_connect: default
     environment:
       flutter: 3.22.2
       xcode: latest
