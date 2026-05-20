@@ -9,9 +9,12 @@ workflows:
       events:
         - push
     scripts:
-      - name: Set up local.properties
+      - name: Recreate Android Project (Fix V1 Embedding)
         script: |
-          echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
+          # Eski sıkıntılı android klasörünü sunucuda tamamen siliyoruz
+          rm -rf android
+          # Flutter'a sıfır kilometre, en güncel standartta Android altyapısı kurduruyoruz
+          flutter create --platforms=android .
       - name: Get Flutter packages
         script: |
           flutter pub get
